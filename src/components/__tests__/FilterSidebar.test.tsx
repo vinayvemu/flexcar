@@ -10,8 +10,21 @@ const mockFilters: Filters = {
   color: ["Red", "Blue"],
 };
 
-const mockAvailableMakes = ["Toyota", "Honda", "BMW", "Ford", "Tesla"];
-const mockAvailableColors = ["Red", "Blue", "Green", "White", "Black"];
+const mockAvailableMakes = [
+  { name: "Toyota", count: 3 },
+  { name: "Honda", count: 2 },
+  { name: "BMW", count: 4 },
+  { name: "Ford", count: 1 },
+  { name: "Tesla", count: 5 },
+];
+
+const mockAvailableColors = [
+  { name: "Red", count: 2 },
+  { name: "Blue", count: 4 },
+  { name: "Green", count: 3 },
+  { name: "White", count: 6 },
+  { name: "Black", count: 1 },
+];
 
 const defaultProps = {
   filters: mockFilters,
@@ -39,15 +52,19 @@ describe("FilterSidebar", () => {
     it("renders all available makes and colors as checkboxes", () => {
       render(<FilterSidebar {...defaultProps} />);
 
-      mockAvailableMakes.forEach((make) => {
+      mockAvailableMakes.forEach((makeOption) => {
         expect(
-          screen.getByRole("checkbox", { name: make })
+          screen.getByRole("checkbox", {
+            name: `${makeOption.name} ${makeOption.count}`,
+          })
         ).toBeInTheDocument();
       });
 
-      mockAvailableColors.forEach((color) => {
+      mockAvailableColors.forEach((colorOption) => {
         expect(
-          screen.getByRole("checkbox", { name: color })
+          screen.getByRole("checkbox", {
+            name: `${colorOption.name} ${colorOption.count}`,
+          })
         ).toBeInTheDocument();
       });
     });
@@ -55,11 +72,11 @@ describe("FilterSidebar", () => {
     it("shows selected filters as checked", () => {
       render(<FilterSidebar {...defaultProps} />);
 
-      expect(screen.getByRole("checkbox", { name: "Toyota" })).toBeChecked();
-      expect(screen.getByRole("checkbox", { name: "Honda" })).toBeChecked();
-      expect(screen.getByRole("checkbox", { name: "Red" })).toBeChecked();
-      expect(screen.getByRole("checkbox", { name: "Blue" })).toBeChecked();
-      expect(screen.getByRole("checkbox", { name: "BMW" })).not.toBeChecked();
+      expect(screen.getByRole("checkbox", { name: "Toyota 3" })).toBeChecked();
+      expect(screen.getByRole("checkbox", { name: "Honda 2" })).toBeChecked();
+      expect(screen.getByRole("checkbox", { name: "Red 2" })).toBeChecked();
+      expect(screen.getByRole("checkbox", { name: "Blue 4" })).toBeChecked();
+      expect(screen.getByRole("checkbox", { name: "BMW 4" })).not.toBeChecked();
     });
   });
 
@@ -68,7 +85,7 @@ describe("FilterSidebar", () => {
       const user = userEvent.setup();
       render(<FilterSidebar {...defaultProps} />);
 
-      await user.click(screen.getByRole("checkbox", { name: "BMW" }));
+      await user.click(screen.getByRole("checkbox", { name: "BMW 4" }));
 
       expect(defaultProps.setFilters).toHaveBeenCalledWith(
         expect.any(Function)
@@ -79,7 +96,7 @@ describe("FilterSidebar", () => {
       const user = userEvent.setup();
       render(<FilterSidebar {...defaultProps} />);
 
-      await user.click(screen.getByRole("checkbox", { name: "Toyota" }));
+      await user.click(screen.getByRole("checkbox", { name: "Toyota 3" }));
 
       expect(defaultProps.setFilters).toHaveBeenCalledWith(
         expect.any(Function)
@@ -105,8 +122,12 @@ describe("FilterSidebar", () => {
       render(<FilterSidebar {...emptyProps} />);
 
       expect(screen.getByText("Filters (0)")).toBeInTheDocument();
-      mockAvailableMakes.forEach((make) => {
-        expect(screen.getByRole("checkbox", { name: make })).not.toBeChecked();
+      mockAvailableMakes.forEach((makeOption) => {
+        expect(
+          screen.getByRole("checkbox", {
+            name: `${makeOption.name} ${makeOption.count}`,
+          })
+        ).not.toBeChecked();
       });
     });
 

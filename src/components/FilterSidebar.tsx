@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Filters } from "@/types";
+import { Filters, FilterOption } from "@/types";
 import {
   Accordion,
   AccordionSummary,
@@ -22,8 +22,8 @@ import CloseIcon from "@mui/icons-material/Close";
 interface FilterSidebarProps {
   filters: Filters;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-  availableMakes: string[];
-  availableColors: string[];
+  availableMakes: FilterOption[];
+  availableColors: FilterOption[];
   clearFilters: () => void;
   onClose?: () => void;
 }
@@ -42,6 +42,36 @@ const FilterSection: React.FC<{ title: string; children: React.ReactNode }> = ({
       </Box>
     </AccordionDetails>
   </Accordion>
+);
+
+const FilterLabel: React.FC<{ label: string; count: number }> = ({
+  label,
+  count,
+}) => (
+  <Box
+    display="flex"
+    justifyContent="space-between"
+    alignItems="center"
+    width="100%"
+    gap={1}
+  >
+    <Typography variant="body1">{label}</Typography>
+    <Typography
+      variant="caption"
+      sx={{
+        color: "text.secondary",
+        backgroundColor: "grey.100",
+        borderRadius: "8px",
+        px: 1,
+        py: 0.25,
+        minWidth: "24px",
+        textAlign: "center",
+        fontWeight: 500,
+      }}
+    >
+      {count}
+    </Typography>
+  </Box>
 );
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({
@@ -182,16 +212,19 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
       <FilterSection title="Make">
         <FormGroup>
-          {availableMakes.map((make) => (
+          {availableMakes.map((makeOption) => (
             <FormControlLabel
-              key={make}
+              key={makeOption.name}
               control={
                 <Checkbox
-                  checked={filters.make.includes(make)}
-                  onChange={() => handleFilterChange("make", make)}
+                  checked={filters.make.includes(makeOption.name)}
+                  onChange={() => handleFilterChange("make", makeOption.name)}
                 />
               }
-              label={make}
+              label={
+                <FilterLabel label={makeOption.name} count={makeOption.count} />
+              }
+              sx={{ width: "100%", mx: 0 }}
             />
           ))}
         </FormGroup>
@@ -199,16 +232,22 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
       <FilterSection title="Color">
         <FormGroup>
-          {availableColors.map((color) => (
+          {availableColors.map((colorOption) => (
             <FormControlLabel
-              key={color}
+              key={colorOption.name}
               control={
                 <Checkbox
-                  checked={filters.color.includes(color)}
-                  onChange={() => handleFilterChange("color", color)}
+                  checked={filters.color.includes(colorOption.name)}
+                  onChange={() => handleFilterChange("color", colorOption.name)}
                 />
               }
-              label={color}
+              label={
+                <FilterLabel
+                  label={colorOption.name}
+                  count={colorOption.count}
+                />
+              }
+              sx={{ width: "100%", mx: 0 }}
             />
           ))}
         </FormGroup>

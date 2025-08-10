@@ -22,3 +22,8 @@ export interface Filters {
   make: string[];
   color: string[];
 }
+
+export interface FilterOption {
+  name: string;
+  count: number;
+}

@@ -18,16 +18,50 @@ export const useSearchResults = () => {
   // Get zipcode from URL params
   const zipCode = searchParams.get("zipcode") || "";
 
-  // Available options for filters
+  // Get vehicles for current ZIP code (before other filters)
+  const zipCodeVehicles = useMemo(() => {
+    if (!zipCode) return VEHICLES;
+    return VEHICLES.filter((v) => v.zipCode === zipCode);
+  }, [zipCode]);
+
+  // Available options for filters with counts
   const availableMakes = useMemo(() => {
-    const makes = new Set(VEHICLES.map((v) => v.make));
-    return Array.from(makes).sort();
-  }, []);
+    const makes = new Set(zipCodeVehicles.map((v) => v.make));
+
+    return Array.from(makes)
+      .map((make) => {
+        // Apply color filters to get accurate count for this make
+        let vehiclesForCount = [...zipCodeVehicles];
+        if (filters.color.length > 0) {
+          vehiclesForCount = vehiclesForCount.filter((v) =>
+            filters.color.includes(v.color)
+          );
+        }
+
+        const count = vehiclesForCount.filter((v) => v.make === make).length;
+        return { name: make, count };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [zipCodeVehicles, filters.color]);
 
   const availableColors = useMemo(() => {
-    const colors = new Set(VEHICLES.map((v) => v.color));
-    return Array.from(colors).sort();
-  }, []);
+    const colors = new Set(zipCodeVehicles.map((v) => v.color));
+
+    return Array.from(colors)
+      .map((color) => {
+        // Apply make filters to get accurate count for this color
+        let vehiclesForCount = [...zipCodeVehicles];
+        if (filters.make.length > 0) {
+          vehiclesForCount = vehiclesForCount.filter((v) =>
+            filters.make.includes(v.make)
+          );
+        }
+
+        const count = vehiclesForCount.filter((v) => v.color === color).length;
+        return { name: color, count };
+      })
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [zipCodeVehicles, filters.make]);
 
   // Process and filter vehicles
   const processedVehicles = useMemo(() => {

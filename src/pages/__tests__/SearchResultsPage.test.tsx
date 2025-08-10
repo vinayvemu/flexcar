@@ -15,8 +15,16 @@ const mockUseSearchResults = {
   setFilters: jest.fn(),
   sortOption: "price-low" as const,
   setSortOption: jest.fn(),
-  availableMakes: ["Toyota", "Honda", "BMW"],
-  availableColors: ["Red", "Blue", "Black"],
+  availableMakes: [
+    { name: "Toyota", count: 3 },
+    { name: "Honda", count: 2 },
+    { name: "BMW", count: 4 },
+  ],
+  availableColors: [
+    { name: "Red", count: 2 },
+    { name: "Blue", count: 4 },
+    { name: "Black", count: 1 },
+  ],
   clearFilters: jest.fn(),
 };
 

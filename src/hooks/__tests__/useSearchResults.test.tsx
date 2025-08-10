@@ -33,8 +33,12 @@ describe("useSearchResults", () => {
       expect(result.current.filters).toEqual({ make: [], color: [] });
       expect(result.current.sortOption).toBe("price-low");
       expect(result.current.isLoading).toBe(true); // Initially loading when zipcode is empty
-      expect(result.current.availableMakes).toContain("Toyota");
-      expect(result.current.availableColors).toContain("Red");
+      expect(
+        result.current.availableMakes.some((make) => make.name === "Toyota")
+      ).toBe(true);
+      expect(
+        result.current.availableColors.some((color) => color.name === "Red")
+      ).toBe(true);
     });
 
     it("manages filters correctly", () => {
