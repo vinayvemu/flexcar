@@ -106,6 +106,23 @@ yarn build
 
 Optimized build output in `dist/` directory, ready for deployment to any static hosting service.
 
+### Deployment
+
+#### Vercel (Recommended)
+
+The application includes a `vercel.json` configuration for seamless SPA deployment:
+
+```bash
+# Deploy to Vercel
+vercel --prod
+```
+
+**Important**: The `vercel.json` file ensures all routes redirect to `index.html` for client-side routing, preventing 404 errors on page refreshes or direct URL access.
+
+#### Other Static Hosts
+
+For other static hosting services (Netlify, AWS S3, etc.), ensure URL rewriting is configured to redirect all routes to `index.html` for proper SPA functionality.
+
 ## 🧪 Testing Strategy
 
 ### Comprehensive Test Coverage
