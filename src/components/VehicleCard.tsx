@@ -14,7 +14,6 @@ interface VehicleCardProps {
   vehicle: Vehicle;
 }
 
-// we can create a theme typography variants for different fornt sizes and font weights >>c incase of having different variants to be followed across the platform
 const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
   const formatCurrency = (amount: number) => {
     return amount.toLocaleString("en-US", {
@@ -31,6 +30,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 
   return (
     <Card
+      data-testid="vehicle-card"
       elevation={3}
       sx={{
         height: "100%",
