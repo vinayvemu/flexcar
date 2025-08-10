@@ -31,6 +31,7 @@ const VehicleCard: React.FC<VehicleCardProps> = ({ vehicle }) => {
 
   return (
     <Card
+      data-testid="vehicle-card"
       elevation={3}
       sx={{
         height: "100%",
